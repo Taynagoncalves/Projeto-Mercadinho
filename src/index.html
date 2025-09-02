@@ -1,0 +1,57 @@
+<!-- frontend/index.html -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mercadinho Popular</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Mercadinho Popular</h1>
+    </header>
+
+    <main>
+      <section class="form-section">
+        <h2>Adicionar / Editar Produto</h2>
+        <form id="product-form">
+          <input type="hidden" id="product-id" />
+          <div class="field">
+            <label for="name">Nome</label>
+            <input id="name" required />
+          </div>
+          <div class="field">
+            <label for="price">Preço (R$)</label>
+            <input id="price" type="number" step="0.01" required />
+          </div>
+          <div class="field">
+            <label for="quantity">Quantidade</label>
+            <input id="quantity" type="number" min="0" value="1" />
+          </div>
+          <div class="field">
+            <label for="description">Descrição</label>
+            <input id="description" />
+          </div>
+          <div class="actions">
+            <button type="submit" id="save-btn">Salvar</button>
+            <button type="button" id="clear-btn">Limpar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="list-section">
+        <h2>Produtos</h2>
+        <div id="products-list" class="products-grid"></div>
+      </section>
+    </main>
+
+    <footer>
+    
+    </footer>
+  </div>
+
+  <script src="mercadinhoscript.js"></script>
+</body>
+</html>
