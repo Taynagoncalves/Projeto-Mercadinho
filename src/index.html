@@ -38,16 +38,16 @@
     <p id="noProducts" class="text-gray-500 mt-4" style="display: block;">Nenhum produto cadastrado ainda.</p>
   </main>
 
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="modal-close" id="closeModal">&times;</span>
-    <h3 id="modalTitle" class="modal-title">Adicionar Produto</h3>
-    <form id="productForm" class="form">
-      <input type="hidden" id="productId">
-      <input type="text" id="name" placeholder="Nome do Produto" required>
-      <input type="number" id="price" placeholder="Preço (R$)" step="0.01" min="0" required>
-      <input type="number" id="quantity" placeholder="Quantidade" min="0" required>
 
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <span id="closeModal" class="modal-close">&times;</span>
+    <h2 id="modalTitle" class="modal-title">Adicionar Produto</h2>
+    <form id="productForm" class="form">
+      <input type="hidden" id="productId" />
+      <input type="text" id="name" placeholder="Nome do Produto" required />
+      <input type="number" id="price" placeholder="Preço" required />
+      <input type="number" id="quantity" placeholder="Quantidade" required />
       <div class="form-actions">
         <button type="button" id="cancelBtn" class="btn-secondary">Cancelar</button>
         <button type="submit" class="btn-primary">Salvar</button>

@@ -1,5 +1,3 @@
-let products = JSON.parse(localStorage.getItem('products')) || [];
-
 const productTable = document.getElementById("productTable");
 const tbody = productTable.querySelector("tbody");
 const modal = document.getElementById("modal");
@@ -11,7 +9,39 @@ const quantity = document.getElementById("quantity");
 const noProducts = document.getElementById("noProducts");
 
 
-function renderProducts() {
+async function getProducts() {
+  const res = await fetch("/api/products");
+  return res.json();
+}
+
+async function addProduct(product) {
+  const res = await fetch("/api/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(product)
+  });
+  return res.json();
+}
+
+async function updateProduct(id, product) {
+  const res = await fetch(`/api/products/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(product)
+  });
+  return res.json();
+}
+
+async function removeProduct(id) {
+  const res = await fetch(`/api/products/${id}`, {
+    method: "DELETE"
+  });
+  return res.json();
+}
+
+
+async function renderProducts() {
+  const products = await getProducts();
   tbody.innerHTML = "";
   if (products.length === 0) {
     noProducts.style.display = "block";
@@ -47,17 +77,18 @@ function openModal(title, product = null) {
   modal.classList.remove("hidden");
 }
 
-function saveProduct(e) {
+
+async function saveProduct(e) {
   e.preventDefault();
   const newProduct = {
-    id: productId.value ? parseInt(productId.value) : Date.now(),
     name: name.value,
     price: parseFloat(price.value),
     quantity: parseInt(quantity.value)
   };
+
   if (productId.value) {
-    const index = products.findIndex(p => p.id === newProduct.id);
-    products[index] = newProduct;
+   
+    await updateProduct(productId.value, newProduct);
     Swal.fire({
       icon: "success",
       title: "Produto atualizado!",
@@ -66,7 +97,8 @@ function saveProduct(e) {
       showConfirmButton: false
     });
   } else {
-    products.push(newProduct);
+  
+    await addProduct(newProduct);
     Swal.fire({
       icon: "success",
       title: "Produto adicionado!",
@@ -75,17 +107,20 @@ function saveProduct(e) {
       showConfirmButton: false
     });
   }
-  localStorage.setItem("products", JSON.stringify(products));
+
   modal.classList.add("hidden");
   renderProducts();
 }
 
-function editProduct(id) {
+
+async function editProduct(id) {
+  const products = await getProducts();
   const product = products.find(p => p.id === id);
   openModal("Editar Produto", product);
 }
 
-function deleteProduct(id) {
+
+async function deleteProduct(id) {
   Swal.fire({
     title: "Você tem certeza?",
     text: "Essa ação não poderá ser desfeita!",
@@ -95,10 +130,9 @@ function deleteProduct(id) {
     cancelButtonColor: "#10b981",
     confirmButtonText: "Sim, excluir",
     cancelButtonText: "Cancelar"
-  }).then((result) => {
+  }).then(async (result) => {
     if (result.isConfirmed) {
-      products = products.filter(p => p.id !== id);
-      localStorage.setItem("products", JSON.stringify(products));
+      await removeProduct(id);
       renderProducts();
       Swal.fire({
         icon: "success",
@@ -111,10 +145,12 @@ function deleteProduct(id) {
   });
 }
 
+
 document.getElementById("addBtn").onclick = () => openModal("Adicionar Produto");
 document.getElementById("cancelBtn").onclick = () => modal.classList.add("hidden");
 document.getElementById("closeModal").onclick = () => modal.classList.add("hidden");
 
 productForm.onsubmit = saveProduct;
+
 
 renderProducts();
